@@ -1,3 +1,7 @@
+## 1.0.2
+
+* Find config data using key or type
+
 ## 1.0.1
 
 * BuildContext to navigate supported

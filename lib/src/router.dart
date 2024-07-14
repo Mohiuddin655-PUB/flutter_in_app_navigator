@@ -177,7 +177,7 @@ extension InAppNavigatorArgumentExtenstion on Object? {
         return defaultValue;
       }
     } else {
-      if (root is T) {
+      if (key == null && root is T) {
         return root;
       } else {
         return defaultValue;
