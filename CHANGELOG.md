@@ -1,3 +1,12 @@
+## 1.0.3
+
+* Rename navigator data finder operations:
+
+    - Replaced name: [getNavigatorData, getNavigatorDataOrNull]
+    - Old name: [get, getOrNull]
+
+* Remove object finder operation [get] and replace [findOrNull]
+
 ## 1.0.2
 
 * Find config data using key or type

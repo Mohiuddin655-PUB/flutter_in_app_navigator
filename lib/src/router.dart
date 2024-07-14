@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'delegate.dart';
+import 'finder.dart';
 import 'flags.dart';
 
 class InAppNavigator {
@@ -33,14 +34,17 @@ class InAppNavigator {
     Object? key,
     T? defaultValue,
   }) {
-    return arguments.get(key: key, defaultValue: defaultValue);
+    return arguments.getNavigatorData(key: key, defaultValue: defaultValue);
   }
 
   static T? getDataOrNull<T extends Object?>({
     Object? key,
     T? defaultValue,
   }) {
-    return arguments.getOrNull(key: key, defaultValue: defaultValue);
+    return arguments.getNavigatorDataOrNull(
+      key: key,
+      defaultValue: defaultValue,
+    );
   }
 
   static bool isVisited(String name) => i.delegate.isVisited(name);
@@ -154,34 +158,5 @@ class InAppNavigator {
       arguments: arguments,
       routeConfigs: routeConfigs,
     );
-  }
-}
-
-extension InAppNavigatorArgumentExtenstion on Object? {
-  T get<T extends Object?>({Object? key, T? defaultValue}) {
-    final T? arguments = getOrNull(key: key, defaultValue: defaultValue);
-    if (arguments != null) {
-      return arguments;
-    } else {
-      throw UnimplementedError("$T didn't sent from another route");
-    }
-  }
-
-  T? getOrNull<T extends Object?>({Object? key, T? defaultValue}) {
-    var root = this;
-    if (root is Map) {
-      var arguments = root[key];
-      if (arguments is T) {
-        return arguments;
-      } else {
-        return defaultValue;
-      }
-    } else {
-      if (key == null && root is T) {
-        return root;
-      } else {
-        return defaultValue;
-      }
-    }
   }
 }
