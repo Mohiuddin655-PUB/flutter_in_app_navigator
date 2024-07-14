@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum Flag {
-  none,
-  clear,
-  replacement,
-}
+import 'flags.dart';
 
 abstract class InAppNavigatorDelegate {
   final String defaultRoute;
@@ -18,6 +14,14 @@ abstract class InAppNavigatorDelegate {
   bool isVisited(String name);
 
   bool setVisitor(String name);
+
+  void clear<T extends Object?>(
+    BuildContext context,
+    String route, {
+    RoutePredicate? predicate,
+    Object? arguments,
+    Map<String, dynamic>? routeConfigs,
+  });
 
   void close<T extends Object?>(
     BuildContext context, {
@@ -44,15 +48,15 @@ abstract class InAppNavigatorDelegate {
     BuildContext context,
     String route, {
     RoutePredicate? predicate,
-    Object? data,
+    Object? arguments,
     Map<String, dynamic>? routeConfigs,
   }) {
     Router.neglect(context, () {
-      replace(
+      clear(
         context,
         route,
         predicate: predicate,
-        data: data,
+        arguments: arguments,
         routeConfigs: routeConfigs,
       );
     });
@@ -61,33 +65,61 @@ abstract class InAppNavigatorDelegate {
   Future<T?>? navigate<T extends Object?>(
     BuildContext context,
     String route, {
-    Object? data,
+    Object? arguments,
+    Object? result,
     Flag? flag,
+    bool Function(Route<dynamic>)? predicate,
     Map<String, dynamic>? routeConfigs,
   }) {
     switch (flag) {
       case Flag.clear:
-        neglect(context, route, data: data, routeConfigs: routeConfigs);
+        clear(
+          context,
+          route,
+          arguments: arguments,
+          predicate: predicate,
+          routeConfigs: routeConfigs,
+        );
         return Future.value(null);
-      case Flag.replacement:
-        return replace(context, route, data: data, routeConfigs: routeConfigs);
+      case Flag.neglect:
+        neglect(
+          context,
+          route,
+          arguments: arguments,
+          predicate: predicate,
+          routeConfigs: routeConfigs,
+        );
+        return Future.value(null);
+      case Flag.replace:
+        return replace(
+          context,
+          route,
+          arguments: arguments,
+          result: result,
+          routeConfigs: routeConfigs,
+        );
       default:
-        return open(context, route, data: data, routeConfigs: routeConfigs);
+        return open(
+          context,
+          route,
+          arguments: arguments,
+          routeConfigs: routeConfigs,
+        );
     }
   }
 
   Future<T?>? open<T extends Object?>(
     BuildContext context,
     String route, {
-    Object? data,
+    Object? arguments,
     Map<String, dynamic>? routeConfigs,
   });
 
-  Future<T?>? replace<T extends Object?>(
+  Future<T?>? replace<T extends Object?, TO extends Object?>(
     BuildContext context,
     String route, {
-    RoutePredicate? predicate,
-    Object? data,
+    TO? result,
+    Object? arguments,
     Map<String, dynamic>? routeConfigs,
   });
 }

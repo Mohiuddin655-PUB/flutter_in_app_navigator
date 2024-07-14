@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../in_app_navigator.dart';
+import 'delegate.dart';
+import 'flags.dart';
 
 class InAppNavigator {
   final InAppNavigatorDelegate delegate;
@@ -26,12 +27,20 @@ class InAppNavigator {
 
   static Object? _args;
 
-  static Object? get arguments => _args ?? _i?.delegate.arguments;
+  static Object? get arguments => _args ?? i.delegate.arguments;
 
-  static T getData<T extends Object?>([Object? key]) => arguments.get(key);
+  static T getData<T extends Object?>({
+    Object? key,
+    T? defaultValue,
+  }) {
+    return arguments.get(key: key, defaultValue: defaultValue);
+  }
 
-  static T? getDataOrNull<T extends Object?>([Object? key]) {
-    return arguments.getOrNull(key);
+  static T? getDataOrNull<T extends Object?>({
+    Object? key,
+    T? defaultValue,
+  }) {
+    return arguments.getOrNull(key: key, defaultValue: defaultValue);
   }
 
   static bool isVisited(String name) => i.delegate.isVisited(name);
@@ -42,12 +51,28 @@ class InAppNavigator {
 
   static bool setVisitor(String name) => i.delegate.setVisitor(name);
 
+  static void clear<T extends Object?>(
+    BuildContext context,
+    String route, {
+    RoutePredicate? predicate,
+    Object? arguments,
+    Map<String, dynamic>? routeConfigs,
+  }) {
+    i.delegate.clear(
+      context,
+      route,
+      predicate: predicate,
+      arguments: arguments,
+      routeConfigs: routeConfigs,
+    );
+  }
+
   static void close<T extends Object?>(
     BuildContext context, {
     T? result,
     Map<String, dynamic>? routeConfigs,
   }) {
-    return _i?.delegate.close(
+    return i.delegate.close(
       context,
       result: result,
       routeConfigs: routeConfigs,
@@ -59,7 +84,7 @@ class InAppNavigator {
     List<String> routes = const [],
     Map<String, dynamic>? routeConfigs,
   }) {
-    return _i?.delegate.home(
+    return i.delegate.home(
       context,
       routes: routes,
       routeConfigs: routeConfigs,
@@ -70,14 +95,14 @@ class InAppNavigator {
     BuildContext context,
     String route, {
     RoutePredicate? predicate,
-    Object? data,
+    Object? arguments,
     Map<String, dynamic>? routeConfigs,
   }) {
-    return _i?.delegate.neglect(
+    return i.delegate.neglect(
       context,
       route,
       predicate: predicate,
-      data: data,
+      arguments: arguments,
       routeConfigs: routeConfigs,
     );
   }
@@ -85,15 +110,19 @@ class InAppNavigator {
   static Future<T?>? navigate<T extends Object?>(
     BuildContext context,
     String route, {
-    Object? data,
+    Object? arguments,
+    Object? result,
     Flag? flag,
+    bool Function(Route<dynamic>)? predicate,
     Map<String, dynamic>? routeConfigs,
   }) {
-    return _i?.delegate.navigate(
+    return i.delegate.navigate(
       context,
       route,
-      data: data,
+      arguments: arguments,
+      result: result,
       flag: flag,
+      predicate: predicate,
       routeConfigs: routeConfigs,
     );
   }
@@ -101,58 +130,57 @@ class InAppNavigator {
   static Future<T?>? open<T extends Object?>(
     BuildContext context,
     String route, {
-    Object? data,
+    Object? arguments,
     Map<String, dynamic>? routeConfigs,
   }) {
-    return _i?.delegate.open(
+    return i.delegate.open(
       context,
       route,
-      data: data,
+      arguments: arguments,
       routeConfigs: routeConfigs,
     );
   }
 
-  static Future<T?>? replace<T extends Object?>(
+  static Future<T?>? replace<T extends Object?, TO extends Object?>(
     BuildContext context,
     String route, {
-    RoutePredicate? predicate,
-    Object? data,
+    Object? arguments,
+    TO? result,
     Map<String, dynamic>? routeConfigs,
   }) {
-    return _i?.delegate.replace(
+    return i.delegate.replace(
       context,
       route,
-      predicate: predicate,
-      data: data,
+      arguments: arguments,
       routeConfigs: routeConfigs,
     );
   }
 }
 
 extension InAppNavigatorArgumentExtenstion on Object? {
-  T get<T extends Object?>([Object? key, T? secondary]) {
-    final T? data = getOrNull(key, secondary);
-    if (data != null) {
-      return data;
+  T get<T extends Object?>({Object? key, T? defaultValue}) {
+    final T? arguments = getOrNull(key: key, defaultValue: defaultValue);
+    if (arguments != null) {
+      return arguments;
     } else {
       throw UnimplementedError("$T didn't sent from another route");
     }
   }
 
-  T? getOrNull<T extends Object?>([Object? key, T? secondary]) {
+  T? getOrNull<T extends Object?>({Object? key, T? defaultValue}) {
     var root = this;
     if (root is Map) {
-      var data = root[key];
-      if (data is T) {
-        return data;
+      var arguments = root[key];
+      if (arguments is T) {
+        return arguments;
       } else {
-        return secondary;
+        return defaultValue;
       }
     } else {
       if (root is T) {
         return root;
       } else {
-        return secondary;
+        return defaultValue;
       }
     }
   }
