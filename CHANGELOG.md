@@ -1,3 +1,7 @@
+## 1.0.4
+
+* Next route supports
+
 ## 1.0.3
 
 * Rename navigator data finder operations:

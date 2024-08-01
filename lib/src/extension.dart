@@ -31,11 +31,32 @@ extension InAppNavigatorHelper on BuildContext {
   }
 
   void home<T extends Object?>({
+    Object? arguments,
     List<String> routes = const [],
     Map<String, dynamic>? routeConfigs,
   }) {
     return InAppNavigator.home(
       this,
+      arguments: arguments,
+      routes: routes,
+      routeConfigs: routeConfigs,
+    );
+  }
+
+  void next<T extends Object?>(
+    String defaultRoute, {
+    Object? arguments,
+    RoutePredicate? predicate,
+    bool clearMode = false,
+    List<String> routes = const [],
+    Map<String, dynamic>? routeConfigs,
+  }) {
+    return InAppNavigator.next(
+      this,
+      defaultRoute,
+      arguments: arguments,
+      predicate: predicate,
+      clearMode: clearMode,
       routes: routes,
       routeConfigs: routeConfigs,
     );

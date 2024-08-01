@@ -31,6 +31,26 @@ abstract class InAppNavigatorDelegate {
 
   void home<T extends Object?>(
     BuildContext context, {
+    Object? arguments,
+    List<String> routes = const [],
+    Map<String, dynamic>? routeConfigs,
+  }) {
+    return next(
+      context,
+      defaultRoute,
+      arguments: arguments,
+      clearMode: true,
+      routes: routes,
+      routeConfigs: routeConfigs,
+    );
+  }
+
+  void next<T extends Object?>(
+    BuildContext context,
+    String defaultRoute, {
+    Object? arguments,
+    RoutePredicate? predicate,
+    bool clearMode = false,
     List<String> routes = const [],
     Map<String, dynamic>? routeConfigs,
   }) {
@@ -41,7 +61,22 @@ abstract class InAppNavigatorDelegate {
         break;
       }
     }
-    replace(context, route);
+    if (clearMode) {
+      clear(
+        context,
+        route,
+        predicate: predicate,
+        arguments: arguments,
+        routeConfigs: routeConfigs,
+      );
+    } else {
+      open(
+        context,
+        route,
+        arguments: arguments,
+        routeConfigs: routeConfigs,
+      );
+    }
   }
 
   void neglect(

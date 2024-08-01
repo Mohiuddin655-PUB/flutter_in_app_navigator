@@ -62,6 +62,7 @@ class InAppNavigator {
     Object? arguments,
     Map<String, dynamic>? routeConfigs,
   }) {
+    _args = arguments;
     i.delegate.clear(
       context,
       route,
@@ -85,11 +86,35 @@ class InAppNavigator {
 
   static void home<T extends Object?>(
     BuildContext context, {
+    Object? arguments,
     List<String> routes = const [],
     Map<String, dynamic>? routeConfigs,
   }) {
+    _args = arguments;
     return i.delegate.home(
       context,
+      routes: routes,
+      arguments: arguments,
+      routeConfigs: routeConfigs,
+    );
+  }
+
+  static void next<T extends Object?>(
+    BuildContext context,
+    String defaultRoute, {
+    Object? arguments,
+    RoutePredicate? predicate,
+    bool clearMode = false,
+    List<String> routes = const [],
+    Map<String, dynamic>? routeConfigs,
+  }) {
+    _args = arguments;
+    return i.delegate.next(
+      context,
+      defaultRoute,
+      arguments: arguments,
+      predicate: predicate,
+      clearMode: clearMode,
       routes: routes,
       routeConfigs: routeConfigs,
     );
@@ -102,6 +127,7 @@ class InAppNavigator {
     Object? arguments,
     Map<String, dynamic>? routeConfigs,
   }) {
+    _args = arguments;
     return i.delegate.neglect(
       context,
       route,
@@ -120,6 +146,7 @@ class InAppNavigator {
     bool Function(Route<dynamic>)? predicate,
     Map<String, dynamic>? routeConfigs,
   }) {
+    _args = arguments;
     return i.delegate.navigate(
       context,
       route,
@@ -137,6 +164,7 @@ class InAppNavigator {
     Object? arguments,
     Map<String, dynamic>? routeConfigs,
   }) {
+    _args = arguments;
     return i.delegate.open(
       context,
       route,
@@ -152,6 +180,7 @@ class InAppNavigator {
     TO? result,
     Map<String, dynamic>? routeConfigs,
   }) {
+    _args = arguments;
     return i.delegate.replace(
       context,
       route,
