@@ -15,6 +15,8 @@ abstract class InAppNavigatorDelegate {
 
   bool setVisitor(String name);
 
+  List<String> routes(String name) => [];
+
   void clear<T extends Object?>(
     BuildContext context,
     String route, {
@@ -35,7 +37,7 @@ abstract class InAppNavigatorDelegate {
     List<String> routes = const [],
     Map<String, dynamic>? routeConfigs,
   }) {
-    return next(
+    return visit(
       context,
       defaultRoute,
       arguments: arguments,
@@ -45,7 +47,39 @@ abstract class InAppNavigatorDelegate {
     );
   }
 
-  void next<T extends Object?>(
+  void next(
+    BuildContext context,
+    String currentRoute,
+    String name, {
+    Object? arguments,
+    RoutePredicate? predicate,
+    bool clearMode = false,
+    Map<String, dynamic>? routeConfigs,
+  }) {
+    final routes = this.routes(name);
+    if (routes.isEmpty) return;
+    final index = routes.indexOf(currentRoute);
+    final route = routes.elementAtOrNull(index + 1);
+    if (route == null) return;
+    if (clearMode) {
+      clear(
+        context,
+        route,
+        predicate: predicate,
+        arguments: arguments,
+        routeConfigs: routeConfigs,
+      );
+    } else {
+      open(
+        context,
+        route,
+        arguments: arguments,
+        routeConfigs: routeConfigs,
+      );
+    }
+  }
+
+  void visit<T extends Object?>(
     BuildContext context,
     String defaultRoute, {
     Object? arguments,

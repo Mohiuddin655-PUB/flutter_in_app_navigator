@@ -43,7 +43,26 @@ extension InAppNavigatorHelper on BuildContext {
     );
   }
 
-  void next<T extends Object?>(
+  void next(
+    String currentRoute,
+    String name, {
+    Object? arguments,
+    RoutePredicate? predicate,
+    bool clearMode = false,
+    Map<String, dynamic>? routeConfigs,
+  }) {
+    return InAppNavigator.next(
+      this,
+      currentRoute,
+      name,
+      arguments: arguments,
+      predicate: predicate,
+      clearMode: clearMode,
+      routeConfigs: routeConfigs,
+    );
+  }
+
+  void visit<T extends Object?>(
     String defaultRoute, {
     Object? arguments,
     RoutePredicate? predicate,
@@ -51,7 +70,7 @@ extension InAppNavigatorHelper on BuildContext {
     List<String> routes = const [],
     Map<String, dynamic>? routeConfigs,
   }) {
-    return InAppNavigator.next(
+    return InAppNavigator.visit(
       this,
       defaultRoute,
       arguments: arguments,

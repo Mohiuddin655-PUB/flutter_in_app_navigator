@@ -1,6 +1,6 @@
 name: in_app_navigator
 description: "The in_app_navigator Flutter library is a powerful tool designed to customize route navigation within your Flutter applications. It provides developers with an easy and flexible way to handle navigation actions such as push, pop, and other route management functionalities."
-version: 1.0.4
+version: 1.0.5
 repository: https://github.com/Mohiuddin655-PUB/flutter_in_app_navigator.git
 
 environment:
