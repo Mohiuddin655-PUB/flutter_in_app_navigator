@@ -15,9 +15,9 @@ abstract class InAppNavigatorDelegate {
 
   bool setVisitor(String name);
 
-  List<String> routes(String name) => [];
+  Future<List<String>> routes({String? groupName, Object? args}) async => [];
 
-  void clear<T extends Object?>(
+  Future<T?>? clear<T extends Object?>(
     BuildContext context,
     String route, {
     RoutePredicate? predicate,
@@ -25,13 +25,13 @@ abstract class InAppNavigatorDelegate {
     Map<String, dynamic>? routeConfigs,
   });
 
-  void close<T extends Object?>(
+  Future<T?>? close<T extends Object?>(
     BuildContext context, {
     T? result,
     Map<String, dynamic>? routeConfigs,
   });
 
-  void home<T extends Object?>(
+  Future<T?>? home<T extends Object?>(
     BuildContext context, {
     Object? arguments,
     List<String> routes = const [],
@@ -47,39 +47,38 @@ abstract class InAppNavigatorDelegate {
     );
   }
 
-  void next(
+  Future<T?>? next<T extends Object?>(
     BuildContext context,
-    String currentRoute,
-    String name, {
+    String currentRoute, {
+    String? groupName,
     Object? arguments,
     RoutePredicate? predicate,
     bool clearMode = false,
     Map<String, dynamic>? routeConfigs,
-  }) {
-    final routes = this.routes(name);
-    if (routes.isEmpty) return;
+  }) async {
+    final routes = await this.routes(groupName: groupName, args: arguments);
+    if (routes.isEmpty || !context.mounted) return null;
     final index = routes.indexOf(currentRoute);
     final route = routes.elementAtOrNull(index + 1);
-    if (route == null) return;
+    if (route == null) return null;
     if (clearMode) {
-      clear(
+      return clear(
         context,
         route,
         predicate: predicate,
         arguments: arguments,
         routeConfigs: routeConfigs,
       );
-    } else {
-      open(
-        context,
-        route,
-        arguments: arguments,
-        routeConfigs: routeConfigs,
-      );
     }
+    return open(
+      context,
+      route,
+      arguments: arguments,
+      routeConfigs: routeConfigs,
+    );
   }
 
-  void visit<T extends Object?>(
+  Future<T?>? visit<T extends Object?>(
     BuildContext context,
     String defaultRoute, {
     Object? arguments,
@@ -96,24 +95,23 @@ abstract class InAppNavigatorDelegate {
       }
     }
     if (clearMode) {
-      clear(
+      return clear(
         context,
         route,
         predicate: predicate,
         arguments: arguments,
         routeConfigs: routeConfigs,
       );
-    } else {
-      open(
-        context,
-        route,
-        arguments: arguments,
-        routeConfigs: routeConfigs,
-      );
     }
+    return open(
+      context,
+      route,
+      arguments: arguments,
+      routeConfigs: routeConfigs,
+    );
   }
 
-  void neglect(
+  Future<T?>? neglect<T extends Object?>(
     BuildContext context,
     String route, {
     RoutePredicate? predicate,
@@ -129,6 +127,7 @@ abstract class InAppNavigatorDelegate {
         routeConfigs: routeConfigs,
       );
     });
+    return null;
   }
 
   Future<T?>? navigate<T extends Object?>(
@@ -142,23 +141,21 @@ abstract class InAppNavigatorDelegate {
   }) {
     switch (flag) {
       case Flag.clear:
-        clear(
+        return clear(
           context,
           route,
           arguments: arguments,
           predicate: predicate,
           routeConfigs: routeConfigs,
         );
-        return Future.value(null);
       case Flag.neglect:
-        neglect(
+        return neglect(
           context,
           route,
           arguments: arguments,
           predicate: predicate,
           routeConfigs: routeConfigs,
         );
-        return Future.value(null);
       case Flag.replace:
         return replace(
           context,

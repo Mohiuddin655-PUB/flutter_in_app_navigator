@@ -51,14 +51,14 @@ class InAppNavigator {
 
   static bool setVisitor(String name) => i.delegate.setVisitor(name);
 
-  static void clear<T extends Object?>(
+  static Future<T?>? clear<T extends Object?>(
     BuildContext context,
     String route, {
     RoutePredicate? predicate,
     Object? arguments,
     Map<String, dynamic>? routeConfigs,
   }) {
-    i.delegate.clear(
+    return i.delegate.clear(
       context,
       route,
       predicate: predicate,
@@ -67,7 +67,7 @@ class InAppNavigator {
     );
   }
 
-  static void close<T extends Object?>(
+  static Future<T?>? close<T extends Object?>(
     BuildContext context, {
     T? result,
     Map<String, dynamic>? routeConfigs,
@@ -79,7 +79,7 @@ class InAppNavigator {
     );
   }
 
-  static void home<T extends Object?>(
+  static Future<T?>? home<T extends Object?>(
     BuildContext context, {
     Object? arguments,
     List<String> routes = const [],
@@ -93,10 +93,10 @@ class InAppNavigator {
     );
   }
 
-  static void next(
+  static Future<T?>? next<T extends Object?>(
     BuildContext context,
-    String currentRoute,
-    String name, {
+    String currentRoute, {
+    String? groupName,
     Object? arguments,
     RoutePredicate? predicate,
     bool clearMode = false,
@@ -105,7 +105,7 @@ class InAppNavigator {
     return i.delegate.next(
       context,
       currentRoute,
-      name,
+      groupName: groupName,
       arguments: arguments,
       predicate: predicate,
       clearMode: clearMode,
@@ -113,7 +113,7 @@ class InAppNavigator {
     );
   }
 
-  static void visit<T extends Object?>(
+  static Future<T?>? visit<T extends Object?>(
     BuildContext context,
     String defaultRoute, {
     Object? arguments,
@@ -133,7 +133,7 @@ class InAppNavigator {
     );
   }
 
-  static void neglect(
+  static Future<T?>? neglect<T extends Object?>(
     BuildContext context,
     String route, {
     RoutePredicate? predicate,

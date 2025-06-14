@@ -4,7 +4,7 @@ import 'flags.dart';
 import 'router.dart';
 
 extension InAppNavigatorHelper on BuildContext {
-  void clear<T extends Object?>(
+  Future<T?>? clear<T extends Object?>(
     String route, {
     RoutePredicate? predicate,
     Object? arguments,
@@ -19,7 +19,7 @@ extension InAppNavigatorHelper on BuildContext {
     );
   }
 
-  void close<T extends Object?>({
+  Future<T?>? close<T extends Object?>({
     T? result,
     Map<String, dynamic>? routeConfigs,
   }) {
@@ -30,7 +30,7 @@ extension InAppNavigatorHelper on BuildContext {
     );
   }
 
-  void home<T extends Object?>({
+  Future<T?>? home<T extends Object?>({
     Object? arguments,
     List<String> routes = const [],
     Map<String, dynamic>? routeConfigs,
@@ -43,9 +43,9 @@ extension InAppNavigatorHelper on BuildContext {
     );
   }
 
-  void next(
-    String currentRoute,
-    String name, {
+  Future<T?>? next<T extends Object?>(
+    String currentRoute, {
+    String? groupName,
     Object? arguments,
     RoutePredicate? predicate,
     bool clearMode = false,
@@ -54,7 +54,7 @@ extension InAppNavigatorHelper on BuildContext {
     return InAppNavigator.next(
       this,
       currentRoute,
-      name,
+      groupName: groupName,
       arguments: arguments,
       predicate: predicate,
       clearMode: clearMode,
@@ -62,7 +62,7 @@ extension InAppNavigatorHelper on BuildContext {
     );
   }
 
-  void visit<T extends Object?>(
+  Future<T?>? visit<T extends Object?>(
     String defaultRoute, {
     Object? arguments,
     RoutePredicate? predicate,
@@ -81,7 +81,7 @@ extension InAppNavigatorHelper on BuildContext {
     );
   }
 
-  void neglect(
+  Future<T?>? neglect<T extends Object?>(
     String route, {
     RoutePredicate? predicate,
     Object? arguments,
